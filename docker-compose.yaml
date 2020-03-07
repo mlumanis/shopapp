@@ -1,0 +1,29 @@
+version: "3"
+services:
+  postgres:
+    image: postgres:latest
+    network_mode: bridge
+    container_name: postgres
+    expose:
+    - 5432
+    ports:
+    - 5432:5432
+    environment:
+    - POSTGRES_PASSWORD=admin
+    - POSTGRES_USER=postgres
+    - POSTGRES_DB=shopdb
+    restart: unless-stopped
+  # APP*****************************************
+  shopapp:
+    network_mode: bridge
+    container_name: shopapp
+    build: ./
+    expose:
+    - 8090
+    ports:
+    - 8090:8090
+    restart: unless-stopped
+    depends_on:
+    - postgres
+    links:
+    - postgres
