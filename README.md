@@ -1,3 +1,10 @@
+# Application Assignment
+### Tech
+
+Dillinger uses a number of open source projects to work properly:
+
+* [SpringBoot] - spring MVC + DI + Test
+* [Postgres] - contenerized database used on production docker host
 * [H2] - in memory database for tests and dev
 * [Docker] 
 
@@ -11,9 +18,9 @@ $ docker-compose up -d
 
 ### Docker Enviroment
 
-Dillinger is currently extended with the following plugins. Instructions on how to use them in your own application are linked below.
-
 | Container | Port |
 | ------ | ------ |
 | Postgres database | 5432 |
 | SpringBoot application | 8090 |
+
+
