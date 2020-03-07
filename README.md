@@ -4,9 +4,11 @@
 Dillinger uses a number of open source projects to work properly:
 
 * [SpringBoot] - spring MVC + DI + Test
-* [Postgres] - contenerized database used on production docker host
+* [Hibernate] - ORM framework
+* [Postgres] - containerized database used on production docker host
 * [H2] - in memory database for tests and dev
-* [Docker] 
+* [Docker] -containerization
+* [Swagger]  - REST API documentation
 
 ### Installation
 
