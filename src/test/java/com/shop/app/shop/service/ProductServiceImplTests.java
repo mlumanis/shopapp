@@ -7,16 +7,16 @@ import com.shop.app.shop.exception.ItemNotFoundException;
 import com.shop.app.shop.model.Price;
 import com.shop.app.shop.model.Product;
 import com.shop.app.shop.repository.ProductRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -107,7 +107,7 @@ public class ProductServiceImplTests {
 
         verify(productRepository, times(1)).save(productCaptor.capture());
         Product productCaptorValue = productCaptor.getValue();
-        
+
         //Check if productRepository.save() was invoked with proper arguments
         assertEquals(productCaptorValue.getProductName(),carDto.getName());
         assertEquals(productCaptorValue.getPriceList().size(),1);

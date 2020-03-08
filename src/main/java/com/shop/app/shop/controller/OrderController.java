@@ -26,8 +26,8 @@ public class OrderController {
 
     @GetMapping(value = "/{dateFrom}/{dateTo}")
     public List<HistoricalOrderListDto> getOrdersInDateRange(
-            @ApiParam(value = "Date after the orders were created", required = true) @PathVariable("dateFrom") String startDate,
-            @ApiParam(value = "End date before the orders were created", required = true) @PathVariable("dateTo") String endDate) {
+            @ApiParam(value = "Date after the orders were created (YYYY-MM-DD)", required = true) @PathVariable("dateFrom") String startDate,
+            @ApiParam(value = "End date before the orders were created (YYYY-MM-DD)", required = true) @PathVariable("dateTo") String endDate) {
         return orderService.getOrdersInDateRange(startDate, endDate);
     }
 

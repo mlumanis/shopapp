@@ -5,6 +5,7 @@
 * [Hibernate] - ORM framework
 * [Postgres] - containerized database used on production docker host
 * [H2] - in memory database for tests and dev
+* [Flyway] - database migrations
 * [Docker] -containerization
 * [Swagger]  - REST API documentation
 
@@ -16,13 +17,28 @@ Clone the repository and run command:
 $ docker-compose up -d
 ```
 
+This command should set up two containers:
+* Application on Spring Boot 
+* Postres Container
+
+If you want to test application on your localhost, without deploying containers, you can run the 
+springBoot app using dev profile.
+
+```sh
+-Dspring.profiles.active=dev
+```
+
+This command tells Spring to use 'dev' profile and sets up H2 inmemory database.
+
 ### Docker Environment
 
 For the purpose of this application I containerized Postgres database(which I wouldn't do in real world). 
+Moreover I created REST-API documentation using Swagger library.
+Services available in docker host containers:
 
-| Container | URL |
+| Service | URL |
 | ------ | ------ |
-| Postgres database | 5432 |
+| Postgres database | localhost:5432/shopdb |
 | SpringBoot application | http://localhost:8090 |
 | Swagger Rest documentation | http://localhost:8090/swagger-ui.html |
 

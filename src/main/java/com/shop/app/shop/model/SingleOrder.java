@@ -1,9 +1,7 @@
 package com.shop.app.shop.model;
 
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
@@ -15,6 +13,8 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @Entity
+@AllArgsConstructor
+@Builder
 @Table(name = "SINGLE_ORDER")
 public class SingleOrder {
 
