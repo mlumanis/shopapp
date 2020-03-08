@@ -40,8 +40,8 @@ To make our application more redundant:
 * I would use centralised log storage i.e. Logstash ELK
 * In terms of authentication and session management, I would set up a Redis cluster for global session storage
 * To scale scale up the system I would use EventDriven architecture. Each microservice 
-sends the eventMessage to Kafka queue. On the other side of the system the are Kafka consumers that consumes event from KAfka topic
-and persists it to database.  
+sends the eventMessage to Kafka queue. On the other side of the system the are Kafka consumers that consumes event from
+Kafka topic and persists it to database.  
 
 
 

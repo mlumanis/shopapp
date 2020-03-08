@@ -1,8 +1,5 @@
 package com.shop.app.shop.controller;
-import com.shop.app.shop.dto.CreateProductDto;
-import com.shop.app.shop.dto.ProductDto;
-import com.shop.app.shop.dto.UpdateProductNameDto;
-import com.shop.app.shop.dto.UpdateProductPriceDto;
+import com.shop.app.shop.dto.*;
 import com.shop.app.shop.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
@@ -21,20 +18,27 @@ public class ProductController {
 
     @PostMapping
     public void createProduct(
-            @ApiParam(value = "Data transfer object containing parameters required for product creation", required = true) @RequestBody CreateProductDto createProductDto) {
+            @ApiParam(value = "Data transfer object containing parameters required for product creation", required = true)
+            @RequestBody CreateOrUpdateProductDto createProductDto) {
         productService.createProduct(createProductDto);
     }
 
-    @PutMapping("price")
-    public void updateProductPrice(
-            @ApiParam(value = "JSON object containing parameters required for product update", required = true) @RequestBody UpdateProductPriceDto updateProductPriceDto) {
-        productService.updateProductPrice(updateProductPriceDto);
+    @PatchMapping("/{uuid}")
+    public void partialProductUpdate(
+            @ApiParam(value = "JSON object containing parameters required for product's name update", required = true)
+            @RequestBody CreateOrUpdateProductDto updateProductDto,
+            @ApiParam(value = "Product's UUID", required = true)
+            @PathVariable("uuid") String uuid) {
+        productService.partialUpdateProduct(updateProductDto, uuid);
     }
 
-    @PutMapping("name")
-    public void updateProductName(
-            @ApiParam(value = "JSON object containing parameters required for product update", required = true) @RequestBody UpdateProductNameDto updateProductNameDto) {
-        productService.updateProductName(updateProductNameDto);
+    @PutMapping("/{uuid}")
+    public void productUpdate(
+            @ApiParam(value = "JSON object containing parameters required for product's name update", required = true)
+            @RequestBody CreateOrUpdateProductDto updateProductDto,
+            @ApiParam(value = "Product's UUID", required = true)
+            @PathVariable("uuid") String uuid) {
+        productService.updateProduct(updateProductDto, uuid);
     }
 
     @GetMapping
