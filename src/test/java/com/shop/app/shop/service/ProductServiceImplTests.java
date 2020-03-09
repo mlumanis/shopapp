@@ -46,20 +46,20 @@ public class ProductServiceImplTests {
         price1.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         price1.setProduct(product1);
 
-        price1.setId(UUID.randomUUID());
+        price1.setUuid(UUID.randomUUID());
         price1.setPrice(new BigDecimal("12.90"));
 
         Price price2 = new Price();
         price2.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         price2.setProduct(product1);
-        price2.setId(UUID.randomUUID());
+        price2.setUuid(UUID.randomUUID());
         price2.setPrice(new BigDecimal("45.90"));
 
         priceList1.add(price1);
         priceList1.add(price2);
 
         product1.setProductName("water");
-        product1.setId(UUID.randomUUID());
+        product1.setId(123L);
         product1.setPriceList(priceList1);
 
         //Product 2
@@ -70,13 +70,13 @@ public class ProductServiceImplTests {
         Price price3 = new Price();
         price2.setCreatedOn(new Timestamp(System.currentTimeMillis()));
         price2.setProduct(product2);
-        price2.setId(UUID.randomUUID());
+        price2.setUuid(UUID.randomUUID());
         price2.setPrice(new BigDecimal("45.90"));
 
         priceList2.add(price3);
 
         product2.setProductName("water");
-        product2.setId(UUID.randomUUID());
+        product2.setId(124L);
         product2.setPriceList(priceList2);
 
 
@@ -109,8 +109,8 @@ public class ProductServiceImplTests {
         Product productCaptorValue = productCaptor.getValue();
 
         //Check if productRepository.save() was invoked with proper arguments
-        assertEquals(productCaptorValue.getProductName(),carDto.getName());
-        assertEquals(productCaptorValue.getPriceList().size(),1);
+        assertEquals(productCaptorValue.getProductName(), carDto.getName());
+        assertEquals(productCaptorValue.getPriceList().size(), 1);
         assertEquals(productCaptorValue.getPriceList().stream().findFirst().get().getPrice(), carDto.getPrice());
 
     }
@@ -144,7 +144,7 @@ public class ProductServiceImplTests {
         UUID uuid = UUID.randomUUID();
 
 
-        when(productRepository.findById(uuid)).thenReturn(Optional.empty());
+        when(productRepository.findByUUID(uuid)).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class,
                 () -> productService.partialUpdateProduct(dto, uuid.toString()), "Should throw exception");
@@ -155,7 +155,7 @@ public class ProductServiceImplTests {
         CreateOrUpdateProductDto dto = new CreateOrUpdateProductDto();
         UUID uuid = UUID.randomUUID();
 
-        when(productRepository.findById(uuid)).thenReturn(Optional.empty());
+        when(productRepository.findByUUID(uuid)).thenReturn(Optional.empty());
 
         assertThrows(ItemNotFoundException.class,
                 () -> productService.partialUpdateProduct(dto, uuid.toString()), "Should throw exception");
@@ -167,9 +167,9 @@ public class ProductServiceImplTests {
         dto.setName("productName");
         UUID uuid = UUID.randomUUID();
 
-        when(productRepository.findById(uuid)).
+        when(productRepository.findByUUID(uuid)).
                 thenReturn(
-                        Optional.of(Product.builder().id(UUID.randomUUID()).productName("productName").build()));
+                        Optional.of(Product.builder().id(145L).productName("productName").build()));
 
         assertThrows(InvalidParameterException.class,
                 () -> productService.updateProduct(dto, uuid.toString()), "Should throw exception");
@@ -182,9 +182,9 @@ public class ProductServiceImplTests {
         dto.setPrice(new BigDecimal("12.80"));
         UUID uuid = UUID.randomUUID();
 
-        when(productRepository.findById(uuid)).
+        when(productRepository.findByUUID(uuid)).
                 thenReturn(
-                        Optional.of(Product.builder().id(UUID.randomUUID()).productName("productName").build()));
+                        Optional.of(Product.builder().id(123L).productName("productName").build()));
 
         assertThrows(InvalidParameterException.class,
                 () -> productService.updateProduct(dto, uuid.toString()), "Should throw exception");
@@ -197,7 +197,7 @@ public class ProductServiceImplTests {
         String invalidUUID = "2342;234234";
         UUID uuid = UUID.randomUUID();
 
-        assertThrows(IllegalArgumentException .class,
+        assertThrows(IllegalArgumentException.class,
                 () -> productService.updateProduct(dto, invalidUUID), "Should throw exception");
     }
 

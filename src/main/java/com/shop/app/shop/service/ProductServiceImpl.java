@@ -39,14 +39,14 @@ public class ProductServiceImpl implements ProductService{
             LOGGER.info("Some fields are empty");
             return new InvalidParameterException("Some fields are empty");
         });
-
         productRepository.save(product);
     }
 
 
     @Override
     public void partialUpdateProduct(CreateOrUpdateProductDto updateProductDto, String uuid) {
-        Optional<Product> productOptional = productRepository.findById(UUID.fromString(uuid));
+
+        Optional<Product> productOptional = productRepository.findByUUID(UUID.fromString(uuid));
 
         Product product = productOptional.orElseThrow(() -> {
             LOGGER.info("Cannot find the product with UUID: " + UUID.fromString(uuid));
@@ -73,7 +73,7 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void updateProduct(CreateOrUpdateProductDto updateProductDto, String uuid) {
-        Optional<Product> productOptional = productRepository.findById(UUID.fromString(uuid));
+        Optional<Product> productOptional = productRepository.findByUUID(UUID.fromString(uuid));
 
         Product product = productOptional.orElseThrow(() -> {
             LOGGER.info("Cannot find the product with UUID: " + UUID.fromString(uuid));
@@ -110,7 +110,7 @@ public class ProductServiceImpl implements ProductService{
         final Set<ProductDto> dtoList = all.stream().map(product -> {
 
             ProductDto dto = ProductDto.builder().
-                    uuid(product.getId().toString()).
+                    uuid(product.getUuid().toString()).
                     name(product.getProductName()).
                     build();
 

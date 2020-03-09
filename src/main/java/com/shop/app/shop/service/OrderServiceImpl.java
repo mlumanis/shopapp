@@ -67,7 +67,7 @@ public class OrderServiceImpl implements OrderService{
         OrderBasket orderBasket = new OrderBasket();
         orderBasket.setEmail(orderDto.getEmail());
         List<SingleOrder> singleOrderList = orderDto.getProductUuidList().stream().map(x -> {
-            Optional<Product> productOptional = productRepository.findById(UUID.fromString(x));
+            Optional<Product> productOptional = productRepository.findByUUID(UUID.fromString(x));
 
             Product product = productOptional.orElseThrow(() -> {
                 LOGGER.info("Cannot find product with UIID: " + x);
@@ -111,7 +111,7 @@ public class OrderServiceImpl implements OrderService{
                         ProductDto productDto = new ProductDto();
                         productDto.setPrice(singleOrder.getPrice().getPrice());
                         productDto.setName(singleOrder.getProduct().getProductName());
-                        productDto.setUuid(singleOrder.getProduct().getId().toString());
+                        productDto.setUuid(singleOrder.getProduct().getUuid().toString());
                         return productDto;
             }).collect(Collectors.toList());
 

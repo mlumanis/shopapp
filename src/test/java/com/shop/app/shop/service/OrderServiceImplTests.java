@@ -73,19 +73,19 @@ public class OrderServiceImplTests {
         Price price = Price.builder().
                 createdOn(new Timestamp(System.currentTimeMillis())).
                 price(new BigDecimal("123.00")).
-                id(priceUuid).
+                id(125L).
                 build();
 
         Set<Price> priceList = new HashSet<Price>();
         priceList.add(price);
 
-        Product product = Product.builder().productName("car").id(productUuid).priceList(priceList).build();
+        Product product = Product.builder().productName("car").uuid(productUuid).priceList(priceList).build();
         price.setProduct(product);
 
         CreateOrderDto orderDto = CreateOrderDto.builder().email("email@gmail.com").productUuidList(uuidList).build();
 
         //when
-        when(productRepository.findById(productUuid)).
+        when(productRepository.findByUUID(productUuid)).
                 thenReturn(Optional.of(product));
 
         orderService.createOrderBasket(orderDto);
@@ -106,34 +106,33 @@ public class OrderServiceImplTests {
         Price price1 = Price.builder().
                 createdOn(new Timestamp(System.currentTimeMillis())).
                 price(new BigDecimal("123.00")).
-                id(priceUuid1).
+                uuid(priceUuid1).
                 build();
 
         Price price2 = Price.builder().
                 createdOn(new Timestamp(System.currentTimeMillis() + 1000)).
                 price(new BigDecimal("200.00")).
-                id(priceUuid2).
+                uuid(priceUuid2).
                 build();
 
         Set<Price> priceList = new HashSet<Price>();
         priceList.add(price1);
         priceList.add(price2);
 
-        Product product = Product.builder().productName("car").id(productUuid).priceList(priceList).build();
+        Product product = Product.builder().productName("car").uuid(productUuid).priceList(priceList).build();
         price1.setProduct(product);
         price2.setProduct(product);
 
         CreateOrderDto orderDto = CreateOrderDto.builder().email("email@gmail.com").productUuidList(uuidList).build();
 
         //when
-        when(productRepository.findById(productUuid)).
+        when(productRepository.findByUUID(productUuid)).
                 thenReturn(Optional.of(product));
 
         orderService.createOrderBasket(orderDto);
         verify(orderRepository, times(1)).save(orderBasketCaptor.capture());
 
         assertEquals(orderBasketCaptor.getValue().getOrders().get(0).getPrice().getPrice(), new BigDecimal("200.00"));
-
     }
 
     @Test
@@ -146,12 +145,12 @@ public class OrderServiceImplTests {
 
         Set<Price> priceList = new HashSet<Price>();
 
-        Product product = Product.builder().productName("car").id(productUuid).priceList(priceList).build();
+        Product product = Product.builder().productName("car").uuid(productUuid).priceList(priceList).build();
 
         CreateOrderDto orderDto = CreateOrderDto.builder().email("email@gmail.com").productUuidList(uuidList).build();
 
         //when
-        when(productRepository.findById(productUuid)).
+        when(productRepository.findByUUID(productUuid)).
                 thenReturn(Optional.of(product));
 
         assertThrows(ItemNotFoundException.class,
@@ -190,6 +189,7 @@ public class OrderServiceImplTests {
             throw new RuntimeException("Couldn't parse dates");
         }
 
+
     }
 
     @Test
@@ -210,7 +210,7 @@ public class OrderServiceImplTests {
             Timestamp orderDateTimestamp = new java.sql.Timestamp(orderDate.getTime());
 
             Price price = Price.builder().
-                    id(UUID.randomUUID()).
+                    uuid(UUID.randomUUID()).
                     createdOn(new Timestamp(System.currentTimeMillis())).
                     price(new BigDecimal("200.00")).
                     build();
@@ -219,19 +219,19 @@ public class OrderServiceImplTests {
             priceList.add(price);
 
             Product product = Product.builder().
-                    id(UUID.randomUUID()).
+                    uuid(UUID.randomUUID()).
                     productName("car").
                     priceList(priceList).
                     build();
 
             price.setProduct(product);
 
-            SingleOrder singleOrder = SingleOrder.builder().id(UUID.randomUUID()).price(price).product(product).build();
+            SingleOrder singleOrder = SingleOrder.builder().uuid(UUID.randomUUID()).price(price).product(product).build();
 
             List<SingleOrder> singleOrderList = new ArrayList<SingleOrder>();
             singleOrderList.add(singleOrder);
 
-            OrderBasket order = OrderBasket.builder().id(UUID.randomUUID()).orderTimestamp(orderDateTimestamp).orders(singleOrderList).build();
+            OrderBasket order = OrderBasket.builder().uuid(UUID.randomUUID()).orderTimestamp(orderDateTimestamp).orders(singleOrderList).build();
 
             List<OrderBasket> listOrderBaskets = new ArrayList<OrderBasket>();
 
@@ -249,8 +249,6 @@ public class OrderServiceImplTests {
         } catch (Exception e) {
             throw new RuntimeException("Couldn't parse dates");
         }
-
-
     }
 
 

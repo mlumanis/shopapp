@@ -1,7 +1,9 @@
 package com.shop.app.shop.model;
 
-import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -15,40 +17,46 @@ import java.util.UUID;
 @Table
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 public class OrderBasket {
+
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_basket_generator")
+    @SequenceGenerator(name = "order_basket_generator", sequenceName = "order_basket_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
-    @Type(type="uuid-char")
-    private UUID id;
+    private Long id;
+
+    @Column(name = "uuid", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    @Builder.Default
+    private UUID uuid = UUID.randomUUID();
 
     @Column(name = "email", nullable = false)
     private String email;
+
+    public OrderBasket() {
+        this.uuid = UUID.randomUUID();
+    }
 
     @OneToMany(
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             mappedBy = "basket"
     )
-    private List<SingleOrder> orders= new ArrayList<>();
+    @Builder.Default
+    private List<SingleOrder> orders = new ArrayList<>();
 
     @Column(name = "ORDER_TIMESTAMP", updatable = false, nullable = false)
     private Timestamp orderTimestamp;
 
-    public void addSingleOrder(SingleOrder singleOrder){
+    public void addSingleOrder(SingleOrder singleOrder) {
         orders.add(singleOrder);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(uuid);
     }
 
     @Override
@@ -60,6 +68,6 @@ public class OrderBasket {
         if (getClass() != obj.getClass())
             return false;
         OrderBasket other = (OrderBasket) obj;
-        return id.equals(other.getId());
+        return uuid.equals(other.getUuid());
     }
 }

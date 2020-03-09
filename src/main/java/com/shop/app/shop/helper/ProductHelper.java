@@ -11,13 +11,13 @@ import java.util.Optional;
 
 public class ProductHelper {
 
-    public static Optional<Product> createFromDto(CreateOrUpdateProductDto dto){
+    public static Optional<Product> createFromDto(CreateOrUpdateProductDto dto) {
 
-        if(dto.getName() == null || dto.getPrice() == null){
+        if (dto.getName() == null || dto.getPrice() == null) {
             return Optional.empty();
         }
 
-        Product product =new Product();
+        Product product = new Product();
         product.setProductName(dto.getName());
         Price price = Price.builder().
                 price(dto.getPrice()).
@@ -27,10 +27,10 @@ public class ProductHelper {
 
         product.addPrice(price);
 
-        return  Optional.ofNullable(product);
+        return Optional.ofNullable(product);
     }
 
-    public static Comparator<Price> priceDateComparator(){
+    public static Comparator<Price> priceDateComparator() {
         Comparator<Price> cmp = new Comparator<Price>() {
             @Override
             public int compare(Price a, Price b) {

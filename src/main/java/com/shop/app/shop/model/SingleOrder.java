@@ -2,7 +2,6 @@ package com.shop.app.shop.model;
 
 
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -11,26 +10,26 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @Entity
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
 @Table(name = "SINGLE_ORDER")
 public class SingleOrder {
 
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "single_order_generator")
+    @SequenceGenerator(name = "single_order_generator", sequenceName = "single_order_seq", initialValue = 1, allocationSize = 1)
     @Column(name = "id", updatable = false, nullable = false)
-    @Type(type="uuid-char")
-    private UUID id;
+    private Long id;
+
+    @Column(name = "uuid", updatable = false, nullable = false)
+    @Type(type = "uuid-char")
+    @Builder.Default
+    private UUID uuid = UUID.randomUUID();
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_PRICE")
-    private Price price ;
+    private Price price;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "FK_PRODUCT", nullable = false)
@@ -40,9 +39,13 @@ public class SingleOrder {
     @JoinColumn(name = "FK_BASKET", nullable = false)
     private OrderBasket basket;
 
+    public SingleOrder(){
+        this.uuid = UUID.randomUUID();
+    }
+
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(uuid);
     }
 
     @Override
@@ -54,6 +57,6 @@ public class SingleOrder {
         if (getClass() != obj.getClass())
             return false;
         SingleOrder other = (SingleOrder) obj;
-        return id.equals(other.getId());
+        return uuid.equals(other.getUuid());
     }
 }
