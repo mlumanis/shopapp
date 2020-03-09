@@ -27,3 +27,5 @@ alter table price add constraint PRODUCT_FOREIGN_KEY_CONSTRAINT foreign key (fk_
 alter table single_order add constraint BASKET_FOREIGN_KEY_CONSTRAINT foreign key (fk_basket) references order_basket;
 alter table single_order add constraint PRICE_FOREIGN_KEY_CONSTRAINT foreign key (fk_price) references price;
 alter table single_order add constraint ORDER_PRODUCT_FOREIGN_KEY_CONSTRAINT foreign key (fk_product) references product;
+
+CREATE index index_product_price_basket_fk on single_order (fk_basket, fk_price, fk_product);

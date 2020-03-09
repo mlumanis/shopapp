@@ -42,9 +42,9 @@ Services available in docker host containers:
 | SpringBoot application | http://localhost:8090 |
 | Swagger Rest documentation | http://localhost:8090/swagger-ui.html |
 
-### Entity Relationship model
+### Database entity diagram 
 
-
+![DB Diagram](/images/diagram.png)
 
 ### Answers to your questions
 **Authentication**\
