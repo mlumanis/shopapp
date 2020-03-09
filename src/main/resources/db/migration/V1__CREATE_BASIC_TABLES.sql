@@ -33,6 +33,9 @@ alter table single_order add constraint PRICE_FOREIGN_KEY_CONSTRAINT foreign key
 alter table single_order add constraint ORDER_PRODUCT_FOREIGN_KEY_CONSTRAINT foreign key (fk_product) references product;
 
 CREATE index index_product_price_basket_fk on single_order (fk_basket, fk_price, fk_product);
+CREATE index index_product_uuid on product (uuid);
+CREATE index index_single_order_uuid on single_order (uuid);
+CREATE index index_order_basket_uuid on order_basket (uuid);
 
 create sequence product_seq start with 1 increment by 1;
 create sequence price_seq start with 1 increment by 1;

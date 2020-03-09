@@ -4,7 +4,7 @@
 * [SpringBoot] - MVC + Test
 * [Hibernate] - ORM framework
 * [Postgres] - containerized database used on production docker host
-* [H2] - in memory database for tests and dev
+* [H2] - in memory database for integration tests and dev profile (NOTE: I know that we should use same database type for integration tests and production env, but for the purpose of this project and launch simplicity I decided to use H2 for integration tests)
 * [Flyway] - database migrations
 * [Docker] -containerization
 * [Swagger]  - REST API documentation
@@ -50,8 +50,8 @@ UUIDs are exposed for REST API and IDs are stored internally.
 In order to optimise queries and storage, we can us UUIDs  as binary(16).  
 For purpose of this task I used traditional relational DB, so I used UUIDs  along with database generated Ids which are 
 Primary Keys, so we can have multiple database source without conflicting IDs.
-It also improves performance of insertions to our relational database. It's faster to append record to database where 
-INTEGER is PRIMARY KEY than VARCHAR.
+It also improves performance of insertions to our relational database. It's faster to append record to a database where 
+INTEGER is PRIMARY KEY instead of VARCHAR(uuid).
 
 ### Alternative solution for DB models
 We could use Hibernate Envers for Product auditing, we could simply store BigDecimal price instead of priceList. 
@@ -66,7 +66,8 @@ I would implement JWT (JSON Web Token) based authentication.
 
 **Redundancy**\
 To make our application more redundant:
-* * I would use centralised log storage i.e. Logstash ELK
+* I would use centralised log storage i.e. Logstash ELK
+* By using ID sequence generation strategy and UUIDS we can create unique identifiers in our multi-database enviroment.
 * In terms of authentication and session management, I would set up a Redis cluster for global session storage
 * To scale scale up the system I would use EventDriven architecture. Each microservice 
 sends the eventMessage to Kafka queue. On the other side of the system the are Kafka consumers that consumes event from

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Service
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Transactional
+
 public class ProductServiceImpl implements ProductService{
 
     @Autowired
@@ -32,6 +32,7 @@ public class ProductServiceImpl implements ProductService{
     private static final Logger LOGGER= LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Override
+    @Transactional
     public void createProduct(CreateOrUpdateProductDto createProductDto) {
 
         Optional<Product> productOptional = ProductHelper.createFromDto(createProductDto);
@@ -44,6 +45,7 @@ public class ProductServiceImpl implements ProductService{
 
 
     @Override
+    @Transactional
     public void partialUpdateProduct(CreateOrUpdateProductDto updateProductDto, String uuid) {
 
         Optional<Product> productOptional = productRepository.findByUUID(UUID.fromString(uuid));
@@ -72,6 +74,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public void updateProduct(CreateOrUpdateProductDto updateProductDto, String uuid) {
         Optional<Product> productOptional = productRepository.findByUUID(UUID.fromString(uuid));
 
@@ -105,6 +108,7 @@ public class ProductServiceImpl implements ProductService{
     }
 
     @Override
+    @Transactional
     public Set<ProductDto> getAllProducts(){
         List<Product> all = productRepository.findAll();
         final Set<ProductDto> dtoList = all.stream().map(product -> {
