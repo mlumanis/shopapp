@@ -13,21 +13,20 @@ import com.shop.app.shop.repository.OrderRepository;
 import com.shop.app.shop.repository.ProductRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
-import static com.shop.app.shop.helper.OrderHelper.getTimestampFromString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 public class OrderServiceImplTests {
@@ -45,7 +44,7 @@ public class OrderServiceImplTests {
     ArgumentCaptor<OrderBasket> orderBasketCaptor;
 
     @Test
-    public void createOrderBasketEmptyListTest(){
+    public void createOrderBasketEmptyListTest() {
         List<String> emptyList = new ArrayList();
         CreateOrderDto orderDto = CreateOrderDto.builder().email("simple@email.com").productUuidList(emptyList).build();
         assertThrows(InvalidParameterException.class,
@@ -53,7 +52,7 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void createOrderBasketWrongEmailTest(){
+    public void createOrderBasketWrongEmailTest() {
         List<String> uuidList = new ArrayList();
         uuidList.add(UUID.randomUUID().toString());
         uuidList.add(UUID.randomUUID().toString());
@@ -63,13 +62,13 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void createOrderBasketSuccessTest(){
+    public void createOrderBasketSuccessTest() {
         List<String> uuidList = new ArrayList();
-        UUID productUuid= UUID.randomUUID();
+        UUID productUuid = UUID.randomUUID();
 
         uuidList.add(productUuid.toString());
 
-        UUID priceUuid= UUID.randomUUID();
+        UUID priceUuid = UUID.randomUUID();
 
         Price price = Price.builder().
                 createdOn(new Timestamp(System.currentTimeMillis())).
@@ -77,7 +76,7 @@ public class OrderServiceImplTests {
                 id(priceUuid).
                 build();
 
-        Set<Price> priceList= new HashSet<Price>();
+        Set<Price> priceList = new HashSet<Price>();
         priceList.add(price);
 
         Product product = Product.builder().productName("car").id(productUuid).priceList(priceList).build();
@@ -95,14 +94,14 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void createOrderMostRecentPriceTest(){
+    public void createOrderMostRecentPriceTest() {
         List<String> uuidList = new ArrayList();
-        UUID productUuid= UUID.randomUUID();
+        UUID productUuid = UUID.randomUUID();
 
         uuidList.add(productUuid.toString());
 
-        UUID priceUuid1= UUID.randomUUID();
-        UUID priceUuid2= UUID.randomUUID();
+        UUID priceUuid1 = UUID.randomUUID();
+        UUID priceUuid2 = UUID.randomUUID();
 
         Price price1 = Price.builder().
                 createdOn(new Timestamp(System.currentTimeMillis())).
@@ -111,12 +110,12 @@ public class OrderServiceImplTests {
                 build();
 
         Price price2 = Price.builder().
-                createdOn(new Timestamp(System.currentTimeMillis()+1000)).
+                createdOn(new Timestamp(System.currentTimeMillis() + 1000)).
                 price(new BigDecimal("200.00")).
                 id(priceUuid2).
                 build();
 
-        Set<Price> priceList= new HashSet<Price>();
+        Set<Price> priceList = new HashSet<Price>();
         priceList.add(price1);
         priceList.add(price2);
 
@@ -133,19 +132,19 @@ public class OrderServiceImplTests {
         orderService.createOrderBasket(orderDto);
         verify(orderRepository, times(1)).save(orderBasketCaptor.capture());
 
-        assertEquals(orderBasketCaptor.getValue().getOrders().get(0).getPrice().getPrice(),new BigDecimal("200.00"));
+        assertEquals(orderBasketCaptor.getValue().getOrders().get(0).getPrice().getPrice(), new BigDecimal("200.00"));
 
     }
 
     @Test
-    public void createOrderEmptyPriceListTest(){
+    public void createOrderEmptyPriceListTest() {
         List<String> uuidList = new ArrayList();
-        UUID productUuid= UUID.randomUUID();
+        UUID productUuid = UUID.randomUUID();
 
         uuidList.add(productUuid.toString());
 
 
-        Set<Price> priceList= new HashSet<Price>();
+        Set<Price> priceList = new HashSet<Price>();
 
         Product product = Product.builder().productName("car").id(productUuid).priceList(priceList).build();
 
@@ -161,18 +160,18 @@ public class OrderServiceImplTests {
     }
 
     @Test
-    public void getOrdersInDateRangeInvalidDateFormatTest(){
-        String dateStart= "sdfsfsd";
-        String dateEnd= "3872394jsdf";
+    public void getOrdersInDateRangeInvalidDateFormatTest() {
+        String dateStart = "sdfsfsd";
+        String dateEnd = "3872394jsdf";
 
         assertThrows(InvalidParameterException.class,
-                () ->  orderService.getOrdersInDateRange(dateStart,dateEnd), "Should throw exception");
+                () -> orderService.getOrdersInDateRange(dateStart, dateEnd), "Should throw exception");
     }
 
     @Test
-    public void getOrdersInDateRangeWhenNoOrdersInRepositoryTest(){
-        String dateStart= "2018-09-09";
-        String dateEnd= "2018-10-10";
+    public void getOrdersInDateRangeWhenNoOrdersInRepositoryTest() {
+        String dateStart = "2018-09-09";
+        String dateEnd = "2018-10-10";
 
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -181,23 +180,23 @@ public class OrderServiceImplTests {
             Timestamp startDateTimestamp = new java.sql.Timestamp(parsedStartDate.getTime());
             Timestamp endDateTimestamp = new java.sql.Timestamp(parsedEndDate.getTime());
 
-            when( orderRepository.findOrdersInDateRange(startDateTimestamp, endDateTimestamp)).
+            when(orderRepository.findOrdersInDateRange(startDateTimestamp, endDateTimestamp)).
                     thenReturn(new ArrayList<>());
 
             List<HistoricalOrderListDto> orders = orderService.getOrdersInDateRange(dateStart, dateEnd);
-            assertEquals(orders.size(),0);
+            assertEquals(orders.size(), 0);
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Couldn't parse dates");
         }
 
     }
 
     @Test
-    public void getOrdersInDateRangeSuccessTest(){
-        String dateStartString= "2090-09-09";
-        String dateEndString= "2022-10-10";
-        String orderDateString="2020-02-02";
+    public void getOrdersInDateRangeSuccessTest() {
+        String dateStartString = "2090-09-09";
+        String dateEndString = "2022-10-10";
+        String orderDateString = "2020-02-02";
 
 
         try {
@@ -210,13 +209,13 @@ public class OrderServiceImplTests {
             Date orderDate = dateFormat.parse(orderDateString);
             Timestamp orderDateTimestamp = new java.sql.Timestamp(orderDate.getTime());
 
-            Price price= Price.builder().
+            Price price = Price.builder().
                     id(UUID.randomUUID()).
                     createdOn(new Timestamp(System.currentTimeMillis())).
                     price(new BigDecimal("200.00")).
                     build();
 
-            Set<Price> priceList= new HashSet<>();
+            Set<Price> priceList = new HashSet<>();
             priceList.add(price);
 
             Product product = Product.builder().
@@ -229,31 +228,30 @@ public class OrderServiceImplTests {
 
             SingleOrder singleOrder = SingleOrder.builder().id(UUID.randomUUID()).price(price).product(product).build();
 
-            List<SingleOrder> singleOrderList= new ArrayList<SingleOrder>();
+            List<SingleOrder> singleOrderList = new ArrayList<SingleOrder>();
             singleOrderList.add(singleOrder);
 
             OrderBasket order = OrderBasket.builder().id(UUID.randomUUID()).orderTimestamp(orderDateTimestamp).orders(singleOrderList).build();
 
-            List<OrderBasket> listOrderBaskets= new ArrayList<OrderBasket>();
+            List<OrderBasket> listOrderBaskets = new ArrayList<OrderBasket>();
 
             listOrderBaskets.add(order);
-            when( orderRepository.findOrdersInDateRange(startDateTimestamp, endDateTimestamp)).
+            when(orderRepository.findOrdersInDateRange(startDateTimestamp, endDateTimestamp)).
                     thenReturn(listOrderBaskets);
 
             List<HistoricalOrderListDto> orders = orderService.getOrdersInDateRange(dateStartString, dateEndString);
-            assertEquals(orders.size(),1);
-            assertEquals(orders.get(0).getOrderedProducts().size(),1);
-            assertEquals(orders.get(0).getOrderedProducts().get(0).getName(),"car");
-            assertEquals(orders.get(0).getOrderedProducts().get(0).getPrice(),new BigDecimal("200.00"));
+            assertEquals(orders.size(), 1);
+            assertEquals(orders.get(0).getOrderedProducts().size(), 1);
+            assertEquals(orders.get(0).getOrderedProducts().get(0).getName(), "car");
+            assertEquals(orders.get(0).getOrderedProducts().get(0).getPrice(), new BigDecimal("200.00"));
 
 
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new RuntimeException("Couldn't parse dates");
         }
 
 
     }
-
 
 
 }

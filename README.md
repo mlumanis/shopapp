@@ -53,6 +53,7 @@ I would implement JWT (JSON Web Token) based authentication.
 
 **Redundancy**\
 To make our application more redundant:
+* I used uuids intead of database generated Ids. 
 * I would use centralised log storage i.e. Logstash ELK
 * In terms of authentication and session management, I would set up a Redis cluster for global session storage
 * To scale scale up the system I would use EventDriven architecture. Each microservice 
